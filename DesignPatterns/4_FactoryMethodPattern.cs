@@ -1,8 +1,3 @@
-
-
-#region Product
-
-// Abstact product class
 using System.Runtime.CompilerServices;
 
 /// <summary>
@@ -17,6 +12,10 @@ using System.Runtime.CompilerServices;
 ///  string to ensure type safety
 /// </summary>
 /// 
+
+#region Product
+
+// Abstact product class
 public abstract class Pizza {
     private String name;
     private String dough;
@@ -40,7 +39,7 @@ public abstract class Pizza {
     }
 
     public virtual void Cut(){
-        Console.ForegroundColor = ConsoleColor.Green;
+        Console.ForegroundColor = ConsoleColor.Blue;
         Console.WriteLine("Cutting \t\t: Diagonal slices");
         Console.ForegroundColor = ConsoleColor.White;
     }
@@ -85,7 +84,7 @@ public class ChicagoStyleCheesePizza : Pizza {
     }
 
     public override void Cut(){
-        Console.ForegroundColor = ConsoleColor.Green;
+        Console.ForegroundColor = ConsoleColor.Blue;
         Console.WriteLine("Cutting \t\t: Square slices");
         Console.ForegroundColor = ConsoleColor.White;
     }
@@ -103,7 +102,7 @@ public class ChicagoStylePeperroniPizza : Pizza {
     }
 
     public override void Cut(){
-        Console.ForegroundColor = ConsoleColor.Green;
+        Console.ForegroundColor = ConsoleColor.Blue;
         Console.WriteLine("Cutting \t\t: Square slices");
         Console.ForegroundColor = ConsoleColor.White;
     }
