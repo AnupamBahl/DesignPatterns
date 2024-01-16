@@ -1,3 +1,6 @@
+using System.Runtime.CompilerServices;
+using System.Threading;
+
 public class TestFile{
     public void SetupAndExecute(){
         TestExecutor testExecutor = new TestExecutor();
@@ -6,6 +9,7 @@ public class TestFile{
         var observerPatternTests = new ObserverPatternSimulator(testExecutor);
         var decoratorPatternTests = new DecoratorPatternSimulator(testExecutor);
         var factoryPatternTests = new FactoryMethodPatternSimulator(testExecutor);
+        var singletonPatternTests = new SingletonPatternSimulator(testExecutor);
 
         testExecutor.Run();
     }
@@ -148,5 +152,51 @@ public class FactoryMethodPatternSimulator : DesignPatternTest {
 
         Console.WriteLine("Ordering a peperroni pizza from ChicagoStore");
         chicagoStore.OrderPizza("Peperroni");
+    }
+}
+
+
+public class SingletonPatternSimulator : DesignPatternTest {
+    public SingletonPatternSimulator(TestExecutionSubject executionSubject){
+        this.Description = "Singleton Pattern";
+        executionSubject.registerTests(this);
+    }
+
+    public override void executeTests()
+    {
+        SingletonTest("Lazy Instantiation, not threadsafe"
+        , SingletonClass_LazyInstantiation.getUniqueObject_LazyInstantiation_NotThreadSafe);
+
+        SingletonTest("Lazy Instantiation, threadsafe with overhead"
+        , SingletonClass_LazyInstantiation.getUniqueObject_LazyInstantiation_ThreadSafe_BigOverhead);
+
+        SingletonTest("Lazy Instantiation, threadsafe, no overhead"
+        , SingletonClass_LazyInstantiation.getUniqueObject_LazyInstantiation_ThreadSafe_MinimalOverhead);
+
+        SingletonTest("Eager Instantiation, threadsafe"
+        , SingletonClass_EagerInstantiation.getUniqueObject_Eagerinstantiation);
+
+        //TestEager();
+    }
+
+    private void SingletonTest<t>(string title, Func<t> function) where t : class{
+        Console.WriteLine(title);
+
+        t obj1 = default(t), obj2 = default(t);
+
+        Thread thread1 = new Thread(() => {
+                obj1 = function();
+            });
+
+        Thread thread2 = new Thread(() => {
+                obj2 = function();
+            });
+
+        thread1.Start();
+        thread2.Start();
+
+        Thread.Sleep(1500);
+
+        Console.WriteLine($"Obj1 == Obj2 : {obj1 == obj2}, obj1 : {obj1}, obj2 : {obj2}\n");
     }
 }
