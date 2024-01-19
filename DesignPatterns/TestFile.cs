@@ -9,7 +9,8 @@ public class TestFile{
         var observerPatternTests = new ObserverPatternSimulator(testExecutor);
         var decoratorPatternTests = new DecoratorPatternSimulator(testExecutor);
         var factoryPatternTests = new FactoryMethodPatternSimulator(testExecutor);
-        var singletonPatternTests = new SingletonPatternSimulator(testExecutor);
+        //var singletonPatternTests = new SingletonPatternSimulator(testExecutor);
+        var commandPatternTests = new CommandPatternSimulator(testExecutor);
 
         testExecutor.Run();
     }
@@ -198,5 +199,47 @@ public class SingletonPatternSimulator : DesignPatternTest {
         Thread.Sleep(1500);
 
         Console.WriteLine($"Obj1 == Obj2 : {obj1 == obj2}, obj1 : {obj1}, obj2 : {obj2}\n");
+    }
+}
+
+
+public class CommandPatternSimulator : DesignPatternTest{
+    public CommandPatternSimulator(TestExecutionSubject executionSubject){
+        this.Description = "Command Pattern Tests";
+        executionSubject.registerTests(this);
+    }
+
+    public override void executeTests(){
+        LightSwitch bedroomSwitch = new LightSwitch("BedroomSwitch");
+        LightSwitch livingroomSwitch = new LightSwitch("LivingroomSwitch");
+        HotTub hotTub = new HotTub();
+
+        Command bedroomSwitchOn = new LightSwitchOnCommand(bedroomSwitch);
+        Command bedroomSwitchOff = new LightSwitchOffCommand(bedroomSwitch);
+        Command livingroomSwitchOn = new LightSwitchOnCommand(livingroomSwitch);
+        Command livingroomSwitchOff = new LightSwitchOffCommand(livingroomSwitch);
+        Command hottubOn = new HotTubOnCommand(hotTub);
+        Command hottubOff = new HotTubOffCommand(hotTub);
+        Command macroCommandOn = new MacroCommand(new List<Command> { livingroomSwitchOn, hottubOn });
+        Command macroCommandOff = new MacroCommand(new List<Command> { livingroomSwitchOff, hottubOff });
+
+        RemoteControl control = new RemoteControl();
+        control.SetCommand(bedroomSwitchOn, bedroomSwitchOff, 1);
+        control.SetCommand(livingroomSwitchOn, livingroomSwitchOff, 2);
+        control.SetCommand(hottubOn, hottubOff, 3);
+        control.SetCommand(macroCommandOn, macroCommandOff, 4);
+
+        Console.WriteLine($"RemoteControl:\n{control.toString()}");
+
+        control.ButtonOn(1);
+        control.ButtonOff(1);
+        control.ButtonOn(2);
+        control.ButtonOn(3);
+        control.Undo();
+        control.ButtonOff(2);
+
+        Console.WriteLine("\nTesting macro:");
+        control.ButtonOn(4);
+        control.Undo();
     }
 }
