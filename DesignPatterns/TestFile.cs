@@ -11,6 +11,7 @@ public class TestFile{
         var factoryPatternTests = new FactoryMethodPatternSimulator(testExecutor);
         //var singletonPatternTests = new SingletonPatternSimulator(testExecutor);
         var commandPatternTests = new CommandPatternSimulator(testExecutor);
+        var adapterPatternTests = new AdapterPatternSimulator(testExecutor);
 
         testExecutor.Run();
     }
@@ -69,6 +70,12 @@ public abstract class DesignPatternTest{
     public string Description { get => description; private protected set => description = value; }
 
     public abstract void executeTests();
+
+    protected void TypeHeading(string s){
+        Console.ForegroundColor = ConsoleColor.Magenta;
+        Console.WriteLine(s);
+        Console.ForegroundColor = ConsoleColor.White;
+    }
 }
 
 public class StrategyPatternSimulator : DesignPatternTest {
@@ -84,7 +91,7 @@ public class StrategyPatternSimulator : DesignPatternTest {
         mallard.performQuack();
 
         Console.ForegroundColor = ConsoleColor.Blue;
-        Console.WriteLine("\nTesting dynamic behavior allocation:");
+        TypeHeading("\nTesting dynamic behavior allocation:");
         Console.ForegroundColor = ConsoleColor.White;
         Duck model = new ModelDuck();
         model.performFly();
@@ -147,11 +154,11 @@ public class FactoryMethodPatternSimulator : DesignPatternTest {
         PizzaStore nyStore = new NYPizzaStore();
         PizzaStore chicagoStore = new ChicagoPizzaStore();
 
-        Console.WriteLine("Ordering a cheese pizza from NyStore");
+        TypeHeading("Ordering a cheese pizza from NyStore");
         nyStore.OrderPizza("Cheese");
         Console.WriteLine("__________________");
 
-        Console.WriteLine("Ordering a peperroni pizza from ChicagoStore");
+        TypeHeading("Ordering a peperroni pizza from ChicagoStore");
         chicagoStore.OrderPizza("Peperroni");
     }
 }
@@ -229,7 +236,7 @@ public class CommandPatternSimulator : DesignPatternTest{
         control.SetCommand(hottubOn, hottubOff, 3);
         control.SetCommand(macroCommandOn, macroCommandOff, 4);
 
-        Console.WriteLine($"RemoteControl:\n{control.toString()}");
+        TypeHeading($"RemoteControl:\n{control.toString()}");
 
         control.ButtonOn(1);
         control.ButtonOff(1);
@@ -238,8 +245,36 @@ public class CommandPatternSimulator : DesignPatternTest{
         control.Undo();
         control.ButtonOff(2);
 
-        Console.WriteLine("\nTesting macro:");
+        TypeHeading("\nTesting macro:");
         control.ButtonOn(4);
         control.Undo();
+    }
+}
+
+public class AdapterPatternSimulator : DesignPatternTest{
+    public AdapterPatternSimulator(TestExecutionSubject executionSubject) {
+        this.Description="Adapter pattern tests";
+        executionSubject.registerTests(this);
+    }
+
+    public override void executeTests()
+    {
+        Wolf actualWolf = new BlackWolf();
+        Dog actualDog = new Doberman();
+        Wolf dogAsWolf = new DogAdapter(actualDog);
+
+        TypeHeading("Actual Wolf -:");
+        actualWolf.Howl();
+        actualWolf.Run();
+        Console.WriteLine();
+
+        TypeHeading("Actual Dog -:");
+        actualDog.Bark();
+        actualDog.Walk();
+        Console.WriteLine();
+
+        TypeHeading("Dog Adapter - Wolf interface wrapping dog object -:");
+        dogAsWolf.Howl();
+        dogAsWolf.Run();
     }
 }
