@@ -12,6 +12,7 @@ public class TestFile{
         //var singletonPatternTests = new SingletonPatternSimulator(testExecutor);
         var commandPatternTests = new CommandPatternSimulator(testExecutor);
         var adapterPatternTests = new AdapterPatternSimulator(testExecutor);
+        var templatePatternTests = new TemplatePatternSimulator(testExecutor);
 
         testExecutor.Run();
     }
@@ -276,5 +277,24 @@ public class AdapterPatternSimulator : DesignPatternTest{
         TypeHeading("Dog Adapter - Wolf interface wrapping dog object -:");
         dogAsWolf.Howl();
         dogAsWolf.Run();
+    }
+}
+
+public class TemplatePatternSimulator : DesignPatternTest{
+    public TemplatePatternSimulator(TestExecutionSubject executionSubject){
+        this.Description = "Template Pattern Tests";
+        executionSubject.registerTests(this);
+    }
+
+    public override void executeTests()
+    {
+        CaffeineBeverage coffeeBeverage = new CoffeeBeverage();
+        CaffeineBeverage teaBeverage = new TeaBeverage();
+
+        TypeHeading("Using Coffee object to call Prepare method");
+        coffeeBeverage.prepareRecipe();
+        Console.WriteLine();
+        TypeHeading("Using Tea object to call Prepare method");
+        teaBeverage.prepareRecipe();
     }
 }
