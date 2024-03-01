@@ -13,6 +13,7 @@ public class TestFile{
         var commandPatternTests = new CommandPatternSimulator(testExecutor);
         var adapterPatternTests = new AdapterPatternSimulator(testExecutor);
         var templatePatternTests = new TemplatePatternSimulator(testExecutor);
+        var iteratorPatternTests = new IteratorPatternSimulator(testExecutor);
 
         testExecutor.Run();
     }
@@ -296,5 +297,22 @@ public class TemplatePatternSimulator : DesignPatternTest{
         Console.WriteLine();
         TypeHeading("Using Tea object to call Prepare method");
         teaBeverage.prepareRecipe();
+    }
+}
+
+
+public class IteratorPatternSimulator : DesignPatternTest{
+    public IteratorPatternSimulator(TestExecutionSubject executionSubject){
+        this.Description = "Iterator Pattern Tests";
+        executionSubject.registerTests(this);
+    }
+
+    public override void executeTests()
+    {
+        Menu dMenu = new DinerMenu();
+        Menu pMenu = new PancakeMenu();
+
+        Waitress client = new Waitress(pMenu, dMenu);
+        client.printMenu();
     }
 }
