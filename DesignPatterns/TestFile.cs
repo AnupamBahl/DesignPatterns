@@ -14,6 +14,7 @@ public class TestFile{
         var adapterPatternTests = new AdapterPatternSimulator(testExecutor);
         var templatePatternTests = new TemplatePatternSimulator(testExecutor);
         var iteratorPatternTests = new IteratorPatternSimulator(testExecutor);
+        var compositePatternTests = new CompositePatternSimulator(testExecutor);
 
         testExecutor.Run();
     }
@@ -313,6 +314,43 @@ public class IteratorPatternSimulator : DesignPatternTest{
         Menu pMenu = new PancakeMenu();
 
         Waitress client = new Waitress(pMenu, dMenu);
+        client.printMenu();
+    }
+}
+
+
+public class CompositePatternSimulator : DesignPatternTest{
+    public CompositePatternSimulator(TestExecutionSubject executionSubject){
+        this.Description = "Composite Pattern Tests";
+        executionSubject.registerTests(this);
+    }
+
+    public override void executeTests()
+    {
+        // All Components are menuComponents
+        MenuComponent pancakeHouseMenu = new CafeMenu("Pancake House Menu", "Breakfast");
+        MenuComponent dinerMenu = new CafeMenu("Diner Menu", "Lunch");
+        MenuComponent dinnerMenu = new CafeMenu("Evening Menu","Dinner");
+        MenuComponent dessertMenu = new CafeMenu("Dessert Menu", "Dessert");
+
+        MenuComponent allMenus = new CafeMenu("All Menu", "All Menu's Combined");
+
+        allMenus.add(pancakeHouseMenu);
+        allMenus.add(dinerMenu);
+        allMenus.add(dinnerMenu);
+
+        dinnerMenu.add(dessertMenu);
+
+        dinnerMenu.add(new CafeMenuItem("Burger", "Lettuce pattie veggie burger", true, 10.3));
+        dinnerMenu.add(new CafeMenuItem("Chicken", "Lemon chicken with rice", false, 13.3));
+        pancakeHouseMenu.add(new CafeMenuItem("Vanilla Pancake", "Stack of 3 vanilla pancakes", true, 5.4));
+        pancakeHouseMenu.add(new CafeMenuItem("Chocolate Pancake", "Stack of 3 chocolate pancakes", false, 6.2));
+        dinnerMenu.add(new CafeMenuItem("Pasta", "Spaghetti with marinara sauce", true, 15.6));
+        dinnerMenu.add(new CafeMenuItem("Apple Pie", "Flakey crust topped with vanilla ice cream", true, 12.36));
+        dessertMenu.add(new CafeMenuItem("TiraMisu", "With honey glazed apple", true, 6.7));
+
+
+        CompositePatternClient client = new CompositePatternClient(allMenus);
         client.printMenu();
     }
 }
