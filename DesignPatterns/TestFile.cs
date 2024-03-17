@@ -15,6 +15,7 @@ public class TestFile{
         var templatePatternTests = new TemplatePatternSimulator(testExecutor);
         var iteratorPatternTests = new IteratorPatternSimulator(testExecutor);
         var compositePatternTests = new CompositePatternSimulator(testExecutor);
+        var statePatternTests = new StatePatternSimulator(testExecutor);
 
         testExecutor.Run();
     }
@@ -352,5 +353,38 @@ public class CompositePatternSimulator : DesignPatternTest{
 
         CompositePatternClient client = new CompositePatternClient(allMenus);
         client.printMenu();
+    }
+}
+
+public class StatePatternSimulator : DesignPatternTest{
+    public StatePatternSimulator(TestExecutionSubject executionSubject){
+        this.Description = "State Pattern Tests";
+        executionSubject.registerTests(this);
+    }
+
+    public override void executeTests(){
+        GumballMachine machine = new GumballMachine(10);
+        
+        TypeHeading("Test 1");
+        Console.WriteLine(machine.ToString());
+
+        machine.insertQuarter();
+
+        Console.WriteLine(machine.ToString());
+
+        machine.ejectQuarter();
+
+        Console.WriteLine(machine.ToString());
+
+        TypeHeading("Test 2");
+        Console.WriteLine(machine.ToString());
+
+        machine.insertQuarter();
+
+        Console.WriteLine(machine.ToString());
+
+        machine.turnCrank();
+
+        Console.WriteLine(machine.ToString());
     }
 }
